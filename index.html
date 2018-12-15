@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>KUN/BTC</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <br>
+      <div class="row">
+        <h3 id="h2" class="col-md-6">KUN/BTC market</h3>
+        <div class="col-md-6 btn-group">
+          <button id="start" class="btn btn-success w-100 disabled">START</button>
+          <button id="stop" class="btn btn-info w-100 disabled">STOP</button>
+          <button id="showBalance" class="btn btn-secondary w-100 disabled">Получить баланс</button>
+        </div>
+      </div>
+          <form id="forma" onsubmit="return false;">
+            <table class="table">
+              <thead class="text-center">
+                <tr>
+                 <th><h4>Kuna</h4></th>
+                 <th><h4>Options</h4></th>
+                 <th><h4></h4></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                 <th>Key: <input id="keyKuna" type="text" class="form-control"></th>
+                 <th>Volume: <input id="volume" type="text" class="form-control"></th>
+
+                </tr>
+                <tr>
+                 <th>Private Key: <input id="secretKuna" type="text" class="form-control"></th>
+                <th>&nbsp<button id="check" class="btn btn-primary w-100">CHECK</button></th>
+                </tr>
+                </tbody>
+            </table>
+          </form>
+          <br>
+      <br>
+      <div class="row">
+        <h3 id="h1" class="col-md-4 float-left"></h3>
+        <h3 id="h3" class="col-md-4" style="font-size:24px !important"></h3>
+        <h3 id="h4" class="col-md-4"></h3>
+      </div>
+    </div>
+
+    <script>
+
+      var data = 'ddaadadadad';
+
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8080/checkAuth",
+        data: JSON.stringify(data),
+        contentType: 'application/x-www-form-urlencoded',
+        success: function(data) {
+          console.log('yes');
+        },
+        error: function(data){
+          console.log(data)
+        }
+    });
+
+//     console.log(document.cookie);
+//     var body1 = document.cookie.replace(/(?:(?:^|.*;\s*)sessionID\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+//     var body = 'parameter=value&also=another';
+//
+//
+//     var xhr = new XMLHttpRequest();
+// xhr.open("POST", 'http://127.0.0.1:8080/checkAuth', true);
+// xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//
+// xhr.onreadystatechange = function() {
+//     if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+//         // Запрос завершен. Здесь можно обрабатывать результат.
+//     }
+// }
+// console.log(body)
+// xhr.send(body);
+
+//
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('POST', 'http://127.0.0.1:8080/checkAuth', true);
+//     xhr.onload = function() {
+//   alert( this.responseText );
+// }
+//
+// xhr.onerror = function() {
+//   alert( 'Ошибка ' + this.status );
+// }
+
+// xhr.send();
+
+
+
+
+      $(document).ready(function(){
+
+          var myStorage = window.localStorage;
+          myStorage.getItem('sessionID');
+          console.log(myStorage);
+
+      });
+
+      $( "#check" ).on("click", function() {
+          var keyKuna    = (document.forms["forma"].elements["keyKuna"].value);
+          var secretKuna = (document.forms["forma"].elements["secretKuna"].value);
+          var volume     = (document.forms["forma"].elements["volume"].value);
+
+
+          if(keyKuna == '' || secretKuna == '' || volume == '' ) return;
+          if( $("#check").hasClass("disabled")) return;
+
+          $.ajax({
+              type: "POST",
+              url: "/check",
+              data: JSON.stringify({0: keyKuna, 1: secretKuna, 2: volume, 3: 0, 4: 0, 5: 0}),
+              contentType: 'application/json',
+              success: function(data) {
+                if(data == 'Data is incorrect!') {
+                  check.innerHTML = data;
+                  return;
+                }
+                $(document.getElementById('stop')).removeClass('disabled');
+                $(document.getElementById('showBalance')).removeClass('disabled');
+                $(document.getElementById('start')).removeClass('disabled');
+                $(document.getElementById('check')).addClass('disabled');
+                check.innerHTML = data;
+              },
+          });
+      });
+
+      $( "#start" ).on("click", function() {
+        if( $("#start").hasClass("disabled")) return;
+
+        $.ajax({
+            type: "POST",
+            url: "/start",
+              success: function(data){
+              if(data == 'Data is incorrect!') {
+                h2.innerHTML = data;
+                return;
+              }
+
+              $(document.getElementById('start')).addClass('disabled');
+
+              h2.innerHTML = "Bot running";
+            },
+        });
+      });
+
+      $( "#stop" ).on("click", function() {
+        if( $("#stop").hasClass("disabled")) return;
+        $.ajax({
+            type: "POST",
+            url: "/stop",
+            data: JSON.stringify({}),
+            contentType: 'application/json',
+            success: function(data){
+
+              $(document.getElementById('stop')).addClass('disabled');
+              $(document.getElementById('start')).removeClass('disabled');
+              $(document.getElementById('check')).removeClass('disabled');
+
+              $("#showBalance").removeClass("active");
+              $("#showOrders").removeClass("active");
+
+              clearInterval(intervalID);
+              clearInterval(intervalIdOrders);
+
+              check.innerHTML = 'Update';
+              h2.innerHTML = data;
+              h1.innerHTML = '';
+              h3.innerHTML = '';
+              h4.innerHTML = '';
+              },
+            });
+      });
+
+
+      $( "#showBalance" ).on("click", function() {
+        if( !($("#showBalance").hasClass("disabled")) ) {
+          if( $("#showBalance").hasClass("active") ) {
+            h3.innerHTML = "";
+            clearInterval(intervalID);
+            $("#showBalance").removeClass("active");
+          } else {
+              updBalance();
+            //  intervalID = setInterval(updBalance, 3000);
+              $("#showBalance").addClass("active");
+            }
+        }
+      });
+
+      function updBalance() {
+        $.ajax({
+            type: "POST",
+            url: "/showBalance",
+            success: function(data){
+                h3.innerHTML = data;
+            },
+        });
+      }
+
+
+
+
+    </script>
+
+  </body>
+</html>
