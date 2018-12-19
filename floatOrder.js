@@ -126,26 +126,22 @@ floatOrder.prototype.showKunPrice = function (difference) {
   return new Promise(function(resolve, reject){
     request( url, function ( errorRequest, responseRequest, body ) {
 
-      if ( errorRequest ) {
-        console.error( 'error: ', errorRequest );
-        throw errorRequest;
-      }
       try {
-        var parse = JSON.parse(body);
-          }
-      catch (err) {
+      if ( errorRequest != null || responseRequest.statusCode >= 300 ) {
+        console.error( 'error: ', errorRequest );
         resolve('err');
-        return;
-      }
-
-      if(body[3] != 'r'){
+        }
+        else {
 
 
+
+
+        var parse = JSON.parse(body);
 
         var askPrice = parse.asks[parse.asks.length-1][0];
         var bidPrice = parse.bids[0][0];
 
-        var diff 		 = (askPrice-0.000001 - bidPrice+0.000001);
+        var diff    = (askPrice-0.000001 - bidPrice+0.000001);
         var priceKun = (((Math.random() * (0.6 - 0.3) + 0.3) * diff) + +bidPrice).toFixed(6);
 
         console.log('ask: ' + askPrice);
@@ -160,12 +156,15 @@ floatOrder.prototype.showKunPrice = function (difference) {
         resolve(priceKun);
         }
         else {
-          resolve('nono');
+          resolve('err');
         }
+
       }
-      else {
-        resolve('nono');
-      }
+    }
+       catch (err) {
+      console.error('err creating', err);
+      resolve('err');
+    }
 
 
     });
