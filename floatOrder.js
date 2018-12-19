@@ -71,31 +71,22 @@ floatOrder.prototype.createKunBuy = function() {
   let request     = require( 'request' );
   return new Promise(function(resolve, reject){
     request.post( url, function ( errorRequest, responseRequest, body ) {
-
-      if ( errorRequest ) {
-        console.error( 'error: ', errorRequest );
-        throw errorRequest;
-      }
       try {
-        var createErr = JSON.parse(body);
-        var resss = 'Created KUN BUY: ' + body;
-        console.log(resss);
-      }
-      catch (err) {
+      if ( errorRequest != null || responseRequest.statusCode >= 300 ) {
+        console.error( 'error: ', errorRequest );
         resolve('err');
-        return;
-      }
-      if(body[3] != 'r'){
-        var parse = JSON.parse(body);
-        var returnText = 'id: ' + parse.id + '\n<br>'
-                       + 'price: ' + parse.price + '\n<br>'
-                       + 'volume: ' + parse.volume + '\n';
-        resolve(+(parse.id));
       }
       else {
-        resolve('nono');
+
+        var parse = JSON.parse(body);
+        resolve(+(parse.id));
       }
-      var dew = fs.appendFileSync('./files/file.json', '\n\n' + now + '\n' + resss,  'utf8');
+    }
+    catch(err) {
+      console.error('err deleting', err);
+
+    }
+
     });
   });
 }

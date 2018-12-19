@@ -16,11 +16,9 @@ var priceUSD    = '';
 var keyBit      = '';
 var secretBit   = '';
 var clientID    = '';
-var allEurs     = 0;
-var intervalll = 0;
+
 var timee = 0;
 
-var bigBoom = false;
 var firstStart = true;
 var intervalID;
 var asd;
@@ -120,8 +118,6 @@ function logic() {
 }
 
 
-
-
 function stop() {
   botOnOrOff = 0;
   firstStart = true;
@@ -130,11 +126,7 @@ function stop() {
   asd.deleteOrder();
 }, 3000);
 }
-/*
-const PORT = 3030;
-const HOST = '0.0.0.0';
 
-app.listen(PORT, HOST);*/
 app.listen(7777, () => console.log('app is running on port 7777!'))
 
-// console.log(`Running on http://${HOST}:${PORT}`);
+
