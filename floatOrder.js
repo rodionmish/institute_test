@@ -111,10 +111,7 @@ floatOrder.prototype.createKunSell = function() {
 
       }
     }
-    catch (err) {
-      console.error('err creating', err);
-      resolve('err');
-    }
+   
     });
   });
 }
