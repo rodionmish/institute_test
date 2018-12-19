@@ -50,62 +50,6 @@
 
     <script>
 
-      var data = 'ddaadadadad';
-
-    $.ajax({
-        type: "POST",
-        url: "http://127.0.0.1:8080/checkAuth",
-        data: JSON.stringify(data),
-        contentType: 'application/x-www-form-urlencoded',
-        success: function(data) {
-          console.log('yes');
-        },
-        error: function(data){
-          console.log(data)
-        }
-    });
-
-//     console.log(document.cookie);
-//     var body1 = document.cookie.replace(/(?:(?:^|.*;\s*)sessionID\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-//     var body = 'parameter=value&also=another';
-//
-//
-//     var xhr = new XMLHttpRequest();
-// xhr.open("POST", 'http://127.0.0.1:8080/checkAuth', true);
-// xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//
-// xhr.onreadystatechange = function() {
-//     if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-//         // Запрос завершен. Здесь можно обрабатывать результат.
-//     }
-// }
-// console.log(body)
-// xhr.send(body);
-
-//
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('POST', 'http://127.0.0.1:8080/checkAuth', true);
-//     xhr.onload = function() {
-//   alert( this.responseText );
-// }
-//
-// xhr.onerror = function() {
-//   alert( 'Ошибка ' + this.status );
-// }
-
-// xhr.send();
-
-
-
-
-      $(document).ready(function(){
-
-          var myStorage = window.localStorage;
-          myStorage.getItem('sessionID');
-          console.log(myStorage);
-
-      });
-
       $( "#check" ).on("click", function() {
           var keyKuna    = (document.forms["forma"].elements["keyKuna"].value);
           var secretKuna = (document.forms["forma"].elements["secretKuna"].value);
