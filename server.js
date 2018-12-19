@@ -114,7 +114,87 @@ app.post("/showOrders", jsonParser, function (request, res) {
 
 
 function logic() {
- 
+ asd.showKunPrice()
+  .then(response => {
+
+    var now = new Date().getHours();
+    console.log('TIME:' + now);
+
+    switch (now) {
+      case 22:
+      case 23:
+      asd.volume = Math.random()*(+startVolume);
+      console.log('X');
+        break;
+      case 0:
+      case 1:
+      case 20:
+      case 21:
+      asd.volume = Math.random()*(+startVolume)*2;
+       console.log('2X'); 
+        break;
+      case 2:
+      case 3:
+      case 18:
+      case 19:
+      console.log('3X');
+        asd.volume = Math.random()*(+startVolume)*3;
+        break;
+      case 4: 
+      case 5:
+      case 16:
+      case 17:
+       console.log('5X');
+        asd.volume = Math.random()*(+startVolume)*5;
+        break;
+      case 6:
+      case 7:
+      case 14:
+      case 15:
+      console.log('7X');
+        asd.volume = Math.random()*(+startVolume)*7;
+        break;
+      case 8:
+      case 9:
+      case 12:
+      case 13:
+        console.log('8X');
+        asd.volume = Math.random()*(+startVolume)*8;
+        break;
+      case 10:
+      case 11:
+      console.log('10X');
+        asd.volume = Math.random()*(+startVolume)*10;
+        break;
+      default:
+      asd.volume = 0;
+    }
+
+    asd.price = `${response}`;
+    console.log('VOLL: ' + asd.volume);
+    console.log('PRICE: ' + asd.price);
+    if (asd.price == 'nono') {
+      console.log('PRICE: ' + asd.price);
+      return;
+    }
+    return;
+    if (asd.price != 'nono'){
+      asd.createKunSell()
+        .then(response => {
+          var checking = `${response}`;
+          if (checking != 'nono'){
+            asd.createKunBuy()
+            .then(response => {
+              var checking = `${response}`;
+              if (checking == 'nono') {
+                asd.deleteOrder();
+              }
+            })
+          }
+        })
+    }
+
+  })
 }
 
 
