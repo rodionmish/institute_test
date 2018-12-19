@@ -84,7 +84,7 @@ floatOrder.prototype.createKunBuy = function() {
     }
     catch(err) {
       console.error('err deleting', err);
-
+      resolve('err');
     }
 
     });
