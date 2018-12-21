@@ -20,7 +20,7 @@ var clientID    = '';
 var timee = 0;
 
 var intervalID;
-var asd;
+var Trading;
 var botOnOrOff = 0;
 
 var request     = require( 'request' );
@@ -28,7 +28,7 @@ var request     = require( 'request' );
 app.post("/check", jsonParser, function(request, res) {
   if(!request.body) return res.sendStatus(400);
   if(keyKuna != '' && secretKuna != '' && startVolume != '' && priceUSD != '' && request.body[5] == 1 && keyBit != '' && secretBit != '' && clientID != '') {
-    asd.showBalance()
+    Trading.showBalance()
       .then(response => {
         if(`${response[2]}` == 'e') {
           res.send('Data is incorrect!');
@@ -43,7 +43,7 @@ app.post("/check", jsonParser, function(request, res) {
       });
   } else if(request.body[5] == 1) return;
   if(request.body[5] == 0) {
-    asd = new floatOrder.floatOrder(request.body[0], request.body[1]
+    Trading = new floatOrder.floatOrder(request.body[0], request.body[1]
               , request.body[2], request.body[3], request.body[4]
                 , request.body[6], request.body[7], request.body[8]);
 
@@ -57,7 +57,7 @@ app.post("/check", jsonParser, function(request, res) {
 
 
 
-    asd.showBalance()
+    Trading.showBalance()
       .then(response => {
         if(`${response[2]}` == 'e') {
 
@@ -74,16 +74,16 @@ app.post("/start", jsonParser, function (request, res) {
 
 
 
-function qwe() {
+function randomInterval() {
     clearInterval(intervalll);
     timee = (Math.random() * (600000 - 60000) + 60000).toFixed(0);
     console.log('interval: ' + timee/60000);
     console.log('START VOLUME!!!: ' + startVolume);
     logic();
-    intervalll = setInterval(qwe, timee);
+    intervalll = setInterval(randomInterval, timee);
 }
 
-qwe();
+randomInterval();
 
 
 });
@@ -96,7 +96,7 @@ app.post("/stop", jsonParser, function (request, res) {
 
 app.post("/showBalance", jsonParser, function (request, res) {
     if(!request.body) return res.sendStatus(400);
-    asd.showBalance()
+    Trading.showBalance()
          .then(response => {
            res.send(`${response}`);
          });
@@ -104,16 +104,16 @@ app.post("/showBalance", jsonParser, function (request, res) {
 
 app.post("/showOrders", jsonParser, function (request, res) {
     if(!request.body) return res.sendStatus(400);
-    asd.showOrders()
+    Trading.showOrders()
          .then(response => {
-           asd.showKunPrice();
+           Trading.showKunPrice();
            res.send(`${response}`);
          });
 });
 
 
 function logic() {
- asd.showKunPrice()
+ Trading.showKunPrice()
   .then(response => {
 
     var now = new Date().getHours();
@@ -122,14 +122,14 @@ function logic() {
     switch (now) {
       case 22:
       case 23:
-      asd.volume = Math.random()*(+startVolume);
+      Trading.volume = Math.random()*(+startVolume);
       console.log('X');
         break;
       case 0:
       case 1:
       case 20:
       case 21:
-      asd.volume = Math.random()*(+startVolume)*2;
+      Trading.volume = Math.random()*(+startVolume)*2;
        console.log('2X'); 
         break;
       case 2:
@@ -137,53 +137,53 @@ function logic() {
       case 18:
       case 19:
       console.log('3X');
-        asd.volume = Math.random()*(+startVolume)*3;
+        Trading.volume = Math.random()*(+startVolume)*3;
         break;
       case 4: 
       case 5:
       case 16:
       case 17:
        console.log('5X');
-        asd.volume = Math.random()*(+startVolume)*5;
+        Trading.volume = Math.random()*(+startVolume)*5;
         break;
       case 6:
       case 7:
       case 14:
       case 15:
       console.log('7X');
-        asd.volume = Math.random()*(+startVolume)*7;
+        Trading.volume = Math.random()*(+startVolume)*7;
         break;
       case 8:
       case 9:
       case 12:
       case 13:
         console.log('8X');
-        asd.volume = Math.random()*(+startVolume)*8;
+        Trading.volume = Math.random()*(+startVolume)*8;
         break;
       case 10:
       case 11:
       console.log('10X');
-        asd.volume = Math.random()*(+startVolume)*10;
+        Trading.volume = Math.random()*(+startVolume)*10;
         break;
       default:
-      asd.volume = 0;
+      Trading.volume = 0;
     }
 
-    asd.price = `${response}`;
-    console.log('VOLL: ' + asd.volume);
-    console.log('PRICE: ' + asd.price);
-    if (asd.price == 'err') {
-      console.log('error: ' + asd.price);
+    Trading.price = `${response}`;
+    console.log('VOLL: ' + Trading.volume);
+    console.log('PRICE: ' + Trading.price);
+    if (Trading.price == 'err') {
+      console.log('error: ' + Trading.price);
       return;
     }
     return;
-    if (asd.price != 'nono'){
-      asd.createKunSell()
+    if (Trading.price != 'nono'){
+      Trading.createKunSell()
         .then((_res)=> {
           if (_res != 'err'){
-            asd.createKunBuy()
+            Trading.createKunBuy()
             .then((_res) => {
-              asd.deleteOrder();
+              Trading.deleteOrder();
             })
           }
         })
@@ -197,7 +197,7 @@ function stop() {
   botOnOrOff = 0;
   clearInterval(intervalll);
   setTimeout(function(){
-  asd.deleteOrder();
+  Trading.deleteOrder();
 }, 3000);
 }
 
