@@ -15,21 +15,25 @@ function floatOrder(keyKuna, secretKuna, volume, clientID, secretBit,  keyBit, p
 
 
 floatOrder.prototype.deleteOrder = function(firstStart) {
-  var url = this.getURL(6, 'post');
+  var url = this.getURL(4, 'post');
   let request     = require( 'request' );
   return new Promise(function(resolve, reject){
     request.post( url, function ( errorRequest, responseRequest, body ) {
-
-      if ( errorRequest ) {
+      try {
+       if ( errorRequest != null || responseRequest.statusCode >= 300 ) {
         console.error( 'error: ', errorRequest );
-        throw errorRequest;
+        resolve('err');
       }
-      if (body = '[]') {
+      else if (body = '[]'){
         console.log('deleted all');
       }
       else {
         console.log('smth went wrong');
       }
+    }
+    catch (err) {
+      console.error(err);
+    }
     });
   });
 }
@@ -41,24 +45,25 @@ floatOrder.prototype.showBalance = function() {
   let request     = require( 'request' );
   return new Promise(function(resolve, reject){
     request( url, function ( errorRequest, responseRequest, body ) {
-      if ( errorRequest ) {
+      try {
+      if ( errorRequest != null || responseRequest.statusCode >= 300 ) {
         console.error( 'error: ', errorRequest );
-        throw errorRequest;
+        resolve('err');
       }
 
-      if (body[3] != 'r') {
-
-
-        var parse = JSON.parse(body);
-        var balKuna = 'KUNA' + '<br>' + 'UAH: ' + parseFloat(parse.accounts[0].balance).toFixed(2)
+      else {
+         var parse = JSON.parse(body);
+         var balKuna = 'KUNA' + '<br>' + 'UAH: ' + parseFloat(parse.accounts[0].balance).toFixed(2)
               + '<br>BTC: ' + parse.accounts[1].balance;
+          resolve('OK';
 
-
-      } else if(body[2] == 'e') {
-        resolve(body);
       }
 
-
+    }
+    catch(err) {
+      console.error('err checking', err);
+      resolve('err');
+    }
     });
 
   });
@@ -83,7 +88,7 @@ floatOrder.prototype.createKunBuy = function() {
       }
     }
     catch(err) {
-      console.error('err deleting', err);
+      console.error('err creating buy', err);
       resolve('err');
     }
 
@@ -110,7 +115,7 @@ floatOrder.prototype.createKunSell = function() {
       }
     }
     catch(err) {
-      console.error('err deleting', err);
+      console.error('err creating sell', err);
       resolve('err');
     }
    
@@ -131,9 +136,6 @@ floatOrder.prototype.showKunPrice = function (difference) {
         resolve('err');
         }
         else {
-
-
-
 
         var parse = JSON.parse(body);
 
@@ -161,7 +163,7 @@ floatOrder.prototype.showKunPrice = function (difference) {
       }
     }
        catch (err) {
-      console.error('err creating', err);
+      console.error('err checking price', err);
       resolve('err');
     }
 
