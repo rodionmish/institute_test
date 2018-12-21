@@ -16,10 +16,9 @@ var priceUSD    = '';
 var keyBit      = '';
 var secretBit   = '';
 var clientID    = '';
-
+  
 var timee = 0;
 
-var firstStart = true;
 var intervalID;
 var asd;
 var botOnOrOff = 0;
@@ -173,22 +172,18 @@ function logic() {
     asd.price = `${response}`;
     console.log('VOLL: ' + asd.volume);
     console.log('PRICE: ' + asd.price);
-    if (asd.price == 'nono') {
-      console.log('PRICE: ' + asd.price);
+    if (asd.price == 'err') {
+      console.log('error: ' + asd.price);
       return;
     }
     return;
     if (asd.price != 'nono'){
       asd.createKunSell()
-        .then(response => {
-          var checking = `${response}`;
-          if (checking != 'nono'){
+        .then((_res)=> {
+          if (_res != 'err'){
             asd.createKunBuy()
-            .then(response => {
-              var checking = `${response}`;
-              if (checking == 'nono') {
-                asd.deleteOrder();
-              }
+            .then((_res) => {
+              asd.deleteOrder();
             })
           }
         })
@@ -200,7 +195,6 @@ function logic() {
 
 function stop() {
   botOnOrOff = 0;
-  firstStart = true;
   clearInterval(intervalll);
   setTimeout(function(){
   asd.deleteOrder();
