@@ -55,7 +55,7 @@ floatOrder.prototype.showBalance = function() {
          var parse = JSON.parse(body);
          var balKuna = 'KUNA' + '<br>' + 'UAH: ' + parseFloat(parse.accounts[0].balance).toFixed(2)
               + '<br>BTC: ' + parse.accounts[1].balance;
-          resolve('OK';
+          resolve('OK');
 
       }
 
