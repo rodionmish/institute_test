@@ -3,7 +3,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var floatOrder = require('./floatOrder.js');
-var fs = require('fs');
 
 var jsonParser = bodyParser.json();
 var app = express();

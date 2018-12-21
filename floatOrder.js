@@ -105,11 +105,13 @@ floatOrder.prototype.createKunSell = function() {
       else {
 
         var parse = JSON.parse(body);
-
         resolve(+(parse.id));
-      
 
       }
+    }
+    catch(err) {
+      console.error('err deleting', err);
+      resolve('err');
     }
    
     });
